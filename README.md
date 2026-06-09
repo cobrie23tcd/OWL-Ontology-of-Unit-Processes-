@@ -1,20 +1,53 @@
-# OWL-Ontology-of-Unit-Processes
-Initial release of two OWL ontologies built in Protégé 
-using Turtle syntax, formalizing unit processes executed 
-by Student Admin 1 within the LCFM framework.
+# Unit Process Ontologies for Lean Analysis of Non-Manufacturing Workflows
 
-Ontologies cover:
+## Description
+Two OWL ontologies formalizing unit processes within 
+the LCFM framework:
 - New Hiring (NH) contract request process
 - Certificate of Employment (CoE) request process
 
-Key classes: UserTask, StartEvent, IntermediateEvent, 
-EndEvent, SequenceFlow, Role, DataStores
+Both processes are executed by the same organizational 
+role (Student Admin 1) and were selected as an initial 
+example for semantic formalization within the LCFM 
+framework.
 
-Key properties: triggeredBy, hasSequenceFlow, 
-hasSubProcess, isPerformedBy, usesDataStore, 
-hasDurationMinutes
+## Purpose
+The ontology layer serves three purposes:
+1. Establishes a shared vocabulary across the four 
+   LCFM partners: Human, Machine, Material, and Method
+2. Provides a machine-readable model between every 
+   observed task duration and its corresponding BPMN 
+   element, directly encoding the raw process time (RPT) 
+   of each unit process
+3. Supports cross-case comparability between the NH and 
+   CoE workflows under a unified semantic framework, 
+   facilitating Operating Curve benchmarking
 
-Each named individual carries empirically measured 
-task durations (RPT) in decimal minutes, enabling 
-SPARQL-based querying and cross-process Operating 
-Curve benchmarking.
+## Contents
+- `new-hiring-ontology.owl` — NH process ontology
+- `certificate-of-employment-ontology.owl` — CoE ontology
+
+## Ontology Details
+- Built in: Protégé
+- Syntax: Turtle / OWL 2
+- Key classes: UserTask, StartEvent, IntermediateEvent,
+  EndEvent, SequenceFlow, Role, DataStores
+- Key properties: triggeredBy, hasSequenceFlow,
+  hasSubProcess, isPerformedBy, usesDataStore,
+  hasDurationMinutes
+
+## Visualization
+- New Hiring Ontology: [WebVOWL link]
+- CoE Ontology: [WebVOWL link]
+
+## Citation
+O'Brien Christ (2026). Unit Process Ontologies for 
+Lean Analysis of Non-Manufacturing Workflows (v1.0) 
+[Dataset]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+
+## References
+- W3C OWL Working Group (2012). OWL 2 Web Ontology 
+  Language Document Overview. 
+  https://www.w3.org/TR/owl2-overview/
+- W3C SPARQL 1.2 Query Language. 
+  https://www.w3.org/TR/sparql12-query/
