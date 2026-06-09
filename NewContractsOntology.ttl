@@ -1,0 +1,656 @@
+@prefix : <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/NewContractsOntology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/NewContractsOntology/> .
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology> rdf:type owl:Ontology ;
+                                                                                   rdfs:comment "Models the new student internship contract process at Infineon Technologies performed by Student Admin 1. Combines BPMN process structure (activities, sequence flows, events) with ontology data (roles, data stores, task durations). Empirical task duration data sourced from NewContractStepsTimes.csv (MM:SS format), observed on 30.07.2024 and 16.12.2025 by Stud_Admin_1." ;
+                                                                                   rdfs:label "New Student Contract Process Ontology" .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> rdf:type owl:ObjectProperty ;
+                                                                                                  rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> ;
+                                                                                                  rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> ;
+                                                                                                  rdfs:comment "Links a FlowNode to its outgoing SequenceFlow connector." ;
+                                                                                                  rdfs:label "has Sequence Flow" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSubProcess
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSubProcess> rdf:type owl:ObjectProperty ;
+                                                                                                rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> ;
+                                                                                                rdfs:comment "Links a parent UserTask to one of its constituent sub-tasks." ;
+                                                                                                rdfs:label "has Sub Process" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> rdf:type owl:ObjectProperty ;
+                                                                                                rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> ;
+                                                                                                rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/Role> ;
+                                                                                                rdfs:comment "Links a UserTask to the Role that performs it." ;
+                                                                                                rdfs:label "is Performed By" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> rdf:type owl:ObjectProperty ;
+                                                                                              rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> ;
+                                                                                              rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> ;
+                                                                                              rdfs:comment "Links a FlowNode to the FlowNode that precedes it in the process." ;
+                                                                                              rdfs:label "triggered By" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/usesDataStore
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/usesDataStore> rdf:type owl:ObjectProperty ;
+                                                                                                rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> ;
+                                                                                                rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/DataStores> ;
+                                                                                                rdfs:comment "Links a UserTask to a DataStore it reads from or writes to." ;
+                                                                                                rdfs:label "uses Data Store" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> rdf:type owl:DatatypeProperty ;
+                                                                                                     rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> ;
+                                                                                                     rdfs:range xsd:decimal ;
+                                                                                                     rdfs:comment "Total empirically measured duration of this process step in decimal minutes, observed by Stud_Admin_1. Values are converted from MM:SS entries in NewContractStepsTimes.csv (TimeHoursMinutes column) using total_seconds / 60. Only leaf classes corresponding to a CSV row carry a value." ;
+                                                                                                     rdfs:label "has Duration in Minutes" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/DataStores
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/DataStores> rdf:type owl:Class ;
+                                                                                             rdfs:comment "BPMN Data Store - persistent information repository accessed by UserTasks." ;
+                                                                                             rdfs:label "Data Stores" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndEvent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndEvent> rdf:type owl:Class ;
+                                                                                           rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> ;
+                                                                                           rdfs:comment "BPMN End Event - terminates a process path." ;
+                                                                                           rdfs:label "End Event" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndOfNewContractProcess
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndOfNewContractProcess> rdf:type owl:Class ;
+                                                                                                          rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndEvent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> rdf:type owl:Class ;
+                                                                                           rdfs:comment "Abstract BPMN Flow Node - common superclass of UserTask, StartEvent, IntermediateEvent and EndEvent. Used as domain/range of triggeredBy and hasSequenceFlow to avoid anonymous union nodes." ;
+                                                                                           rdfs:label "Flow Node" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/IntermediateEvent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/IntermediateEvent> rdf:type owl:Class ;
+                                                                                                    rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> ;
+                                                                                                    rdfs:comment "BPMN Intermediate Event - happens between start and end of a process." ;
+                                                                                                    rdfs:label "Intermediate Event" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHREmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHREmail> rdf:type owl:Class ;
+                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/IntermediateEvent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHRSoftware
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHRSoftware> rdf:type owl:Class ;
+                                                                                               rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/DataStores> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/NewContractRequired
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/NewContractRequired> rdf:type owl:Class ;
+                                                                                                      rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StartEvent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/Role
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/Role> rdf:type owl:Class ;
+                                                                                       rdfs:comment "Organisational role that performs UserTasks." ;
+                                                                                       rdfs:label "Role" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_100_to_200
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_100_to_200> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_200_to_300
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_200_to_300> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_300_to_400
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_300_to_400> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_400_to_MyHREmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_400_to_MyHREmail> rdf:type owl:Class ;
+                                                                                                      rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_500_to_600
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_500_to_600> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_600_to_700
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_600_to_700> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_700_to_End
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_700_to_End> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_MyHREmail_to_500
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_MyHREmail_to_500> rdf:type owl:Class ;
+                                                                                                      rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_Start_to_100
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_Start_to_100> rdf:type owl:Class ;
+                                                                                                  rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SequenceFlow> rdf:type owl:Class ;
+                                                                                               rdfs:comment "BPMN Sequence Flow - directed connector between two flow elements." ;
+                                                                                               rdfs:label "Sequence Flow" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StartEvent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StartEvent> rdf:type owl:Class ;
+                                                                                             rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> ;
+                                                                                             rdfs:comment "BPMN Start Event - trigger that initiates a process instance." ;
+                                                                                             rdfs:label "Start Event" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/Role> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder> rdf:type owl:Class ;
+                                                                                                         rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/DataStores> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentInformationFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentInformationFolder> rdf:type owl:Class ;
+                                                                                                           rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/DataStores> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> rdf:type owl:Class ;
+                                                                                           rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/FlowNode> ;
+                                                                                           rdfs:comment "BPMN User Task - activity performed by a human actor (Student Admin 1)." ;
+                                                                                           rdfs:label "User Task" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/100ReceiveContractRequest
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/100ReceiveContractRequest> rdf:type owl:Class ;
+                                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates> rdf:type owl:Class ;
+                                                                                                          rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/201CreatingHealthcareTemplate
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/201CreatingHealthcareTemplate> rdf:type owl:Class ;
+                                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/202CreatingPrakktikumsplanTemplate
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/202CreatingPrakktikumsplanTemplate> rdf:type owl:Class ;
+                                                                                                                     rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> rdf:type owl:Class ;
+                                                                                                 rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/301OverviewContractsRequestsList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/301OverviewContractsRequestsList> rdf:type owl:Class ;
+                                                                                                                   rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/302StudentOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/302StudentOverviewList> rdf:type owl:Class ;
+                                                                                                         rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/303StudentAdvancedList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/303StudentAdvancedList> rdf:type owl:Class ;
+                                                                                                         rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/304StepUpList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/304StepUpList> rdf:type owl:Class ;
+                                                                                                rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney> rdf:type owl:Class ;
+                                                                                                      rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/401InitiateHiringJourney
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/401InitiateHiringJourney> rdf:type owl:Class ;
+                                                                                                           rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/402SubmitHiringJourney
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/402SubmitHiringJourney> rdf:type owl:Class ;
+                                                                                                         rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail> rdf:type owl:Class ;
+                                                                                                   rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/501OpenMyHRWithHRCEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/501OpenMyHRWithHRCEmail> rdf:type owl:Class ;
+                                                                                                          rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/502CopyHRCNumber
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/502CopyHRCNumber> rdf:type owl:Class ;
+                                                                                                   rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/600CompleteLists
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/600CompleteLists> rdf:type owl:Class ;
+                                                                                                   rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/700SendConfirmationEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/700SendConfirmationEmail> rdf:type owl:Class ;
+                                                                                                           rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/UserTask> .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndOfNewContractProcess
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndOfNewContractProcess> rdf:type owl:NamedIndividual ,
+                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndOfNewContractProcess> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/700SendConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHREmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHREmail> rdf:type owl:NamedIndividual ,
+                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHREmail> ;
+                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_MyHREmail_to_500> ;
+                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHRSoftware
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHRSoftware> rdf:type owl:NamedIndividual ,
+                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHRSoftware> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/NewContractRequired
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/NewContractRequired> rdf:type owl:NamedIndividual ,
+                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/NewContractRequired> ;
+                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_Start_to_100> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_100_to_200
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_100_to_200> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_100_to_200> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_200_to_300
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_200_to_300> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_200_to_300> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_300_to_400
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_300_to_400> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_300_to_400> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_400_to_MyHREmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_400_to_MyHREmail> rdf:type owl:NamedIndividual ,
+                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_400_to_MyHREmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_500_to_600
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_500_to_600> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_500_to_600> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_600_to_700
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_600_to_700> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_600_to_700> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_700_to_End
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_700_to_End> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_700_to_End> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_MyHREmail_to_500
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_MyHREmail_to_500> rdf:type owl:NamedIndividual ,
+                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_MyHREmail_to_500> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_Start_to_100
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_Start_to_100> rdf:type owl:NamedIndividual ,
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_Start_to_100> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder> rdf:type owl:NamedIndividual ,
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentInformationFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentInformationFolder> rdf:type owl:NamedIndividual ,
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentInformationFolder> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/100ReceiveContractRequest
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/100ReceiveContractRequest> rdf:type owl:NamedIndividual ,
+                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/100ReceiveContractRequest> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_100_to_200> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/NewContractRequired> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 1.43 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates> rdf:type owl:NamedIndividual ,
+                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_200_to_300> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/201CreatingHealthcareTemplate> ,
+                                                                                                                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/202CreatingPrakktikumsplanTemplate> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/100ReceiveContractRequest> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentInformationFolder> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/201CreatingHealthcareTemplate
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/201CreatingHealthcareTemplate> rdf:type owl:NamedIndividual ,
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/201CreatingHealthcareTemplate> ;
+                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 1.15 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/202CreatingPrakktikumsplanTemplate
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/202CreatingPrakktikumsplanTemplate> rdf:type owl:NamedIndividual ,
+                                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/202CreatingPrakktikumsplanTemplate> ;
+                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 2.78 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> rdf:type owl:NamedIndividual ,
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> ;
+                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_300_to_400> ;
+                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/301OverviewContractsRequestsList> ,
+                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/302StudentOverviewList> ,
+                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/303StudentAdvancedList> ,
+                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/304StepUpList> ;
+                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates> ;
+                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/301OverviewContractsRequestsList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/301OverviewContractsRequestsList> rdf:type owl:NamedIndividual ,
+                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/301OverviewContractsRequestsList> ;
+                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 2.15 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/302StudentOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/302StudentOverviewList> rdf:type owl:NamedIndividual ,
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/302StudentOverviewList> ;
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 2.45 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/303StudentAdvancedList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/303StudentAdvancedList> rdf:type owl:NamedIndividual ,
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/303StudentAdvancedList> ;
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 2.20 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/304StepUpList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/304StepUpList> rdf:type owl:NamedIndividual ,
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/304StepUpList> ;
+                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 3.90 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney> rdf:type owl:NamedIndividual ,
+                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney> ;
+                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_400_to_MyHREmail> ;
+                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/401InitiateHiringJourney> ,
+                                                                                                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/402SubmitHiringJourney> ;
+                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> ;
+                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHRSoftware> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/401InitiateHiringJourney
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/401InitiateHiringJourney> rdf:type owl:NamedIndividual ,
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/401InitiateHiringJourney> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 1.33 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/402SubmitHiringJourney
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/402SubmitHiringJourney> rdf:type owl:NamedIndividual ,
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/402SubmitHiringJourney> ;
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 4.33 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail> rdf:type owl:NamedIndividual ,
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_500_to_600> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/501OpenMyHRWithHRCEmail> ,
+                                                                                                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/502CopyHRCNumber> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHREmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/501OpenMyHRWithHRCEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/501OpenMyHRWithHRCEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/501OpenMyHRWithHRCEmail> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                          <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 1.43 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/502CopyHRCNumber
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/502CopyHRCNumber> rdf:type owl:NamedIndividual ,
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/502CopyHRCNumber> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 0.15 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/600CompleteLists
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/600CompleteLists> rdf:type owl:NamedIndividual ,
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/600CompleteLists> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_600_to_700> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder> ;
+                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 0.83 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/700SendConfirmationEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/700SendConfirmationEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/700SendConfirmationEmail> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_700_to_End> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/600CompleteLists> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/hasDurationMinutes> 1.35 .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/EndOfNewContractProcess> rdfs:comment "End event marking successful completion of the process." ;
+                                                                                                          rdfs:label "End Of New Contract Process" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHREmail> rdfs:comment "Intermediate event: arrival of the MyHR email containing the HRC number." ;
+                                                                                            rdfs:label "MyHR Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/MyHRSoftware> rdfs:comment "MyHR software system used to initiate and submit the Hiring Journey." ;
+                                                                                               rdfs:label "MyHR Software" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/NewContractRequired> rdfs:comment "Start event triggered when a new internship contract request arrives." ;
+                                                                                                      rdfs:label "New Contract Required" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_100_to_200> rdfs:comment "100 -> 200." ;
+                                                                                                rdfs:label "SF 100 to 200" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_200_to_300> rdfs:comment "200 -> 300." ;
+                                                                                                rdfs:label "SF 200 to 300" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_300_to_400> rdfs:comment "300 -> 400." ;
+                                                                                                rdfs:label "SF 300 to 400" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_400_to_MyHREmail> rdfs:comment "400 -> MyHREmail." ;
+                                                                                                      rdfs:label "SF 400 to MyHREmail" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_500_to_600> rdfs:comment "500 -> 600." ;
+                                                                                                rdfs:label "SF 500 to 600" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_600_to_700> rdfs:comment "600 -> 700." ;
+                                                                                                rdfs:label "SF 600 to 700" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_700_to_End> rdfs:comment "700 -> EndOfNewContractProcess." ;
+                                                                                                rdfs:label "SF 700 to End" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_MyHREmail_to_500> rdfs:comment "MyHREmail -> 500." ;
+                                                                                                      rdfs:label "SF MyHREmail to 500" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/SF_Start_to_100> rdfs:comment "NewContractRequired -> 100." ;
+                                                                                                  rdfs:label "SF Start to 100" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdmin1> rdfs:comment "Student Administrator role responsible for executing all UserTasks. Identified in CSV as 'Stud_Admin_1'." ;
+                                                                                                rdfs:label "Student Admin 1" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentAdminTeamFolder> rdfs:comment "Shared team folder containing the overview, advanced, and step-up lists." ;
+                                                                                                         rdfs:label "Student Admin Team Folder" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/StudentInformationFolder> rdfs:comment "Folder containing per-student documents (CoE, healthcare template, Praktikumsplan)." ;
+                                                                                                           rdfs:label "Student Information Folder" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/100ReceiveContractRequest> rdfs:comment "100 - Receive Contract Request. Role: Student Admin 1. CSV row 100 (01:26 = 1.43 min). Substeps: Reading request email; Reading CoE; Saving CoE." ;
+                                                                                                            rdfs:label "100 Receive Contract Request" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/200CompleteTheTemplates> rdfs:comment "200 - Complete the Templates. Subclasses: 201, 202. Data store: StudentInformationFolder." ;
+                                                                                                          rdfs:label "200 Complete the Templates" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/201CreatingHealthcareTemplate> rdfs:comment "201 - Sub-process of 200. CSV row 201 (01:09 = 1.15 min)." ;
+                                                                                                                rdfs:label "201 Creating Healthcare Template" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/202CreatingPrakktikumsplanTemplate> rdfs:comment "202 - Sub-process of 200. CSV row 202 (02:47 = 2.78 min)." ;
+                                                                                                                     rdfs:label "202 Creating Praktikumsplan Template" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/300AdjustLists> rdfs:comment "300 - Adjust Lists. Subclasses: 301-304. Data store: StudentAdminTeamFolder." ;
+                                                                                                 rdfs:label "300 Adjust Lists" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/301OverviewContractsRequestsList> rdfs:comment "301 - Sub-process of 300. CSV row 301 (02:09 = 2.15 min)." ;
+                                                                                                                   rdfs:label "301 Overview Contracts Requests List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/302StudentOverviewList> rdfs:comment "302 - Sub-process of 300. CSV row 302 (02:27 = 2.45 min)." ;
+                                                                                                         rdfs:label "302 Student Overview List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/303StudentAdvancedList> rdfs:comment "303 - Sub-process of 300. CSV row 303 (02:12 = 2.20 min)." ;
+                                                                                                         rdfs:label "303 Student Advanced List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/304StepUpList> rdfs:comment "304 - Sub-process of 300. CSV row 304 (03:54 = 3.90 min)." ;
+                                                                                                rdfs:label "304 Step Up List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/400StartMyHRJourney> rdfs:comment "400 - Start My HR Journey. Subclasses: 401, 402. Data store: MyHRSoftware." ;
+                                                                                                      rdfs:label "400 Start My HR Journey" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/401InitiateHiringJourney> rdfs:comment "401 - Sub-process of 400. CSV row 401 (01:20 = 1.33 min)." ;
+                                                                                                           rdfs:label "401 Initiate Hiring Journey" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/402SubmitHiringJourney> rdfs:comment "402 - Sub-process of 400. CSV row 402 (04:20 = 4.33 min)." ;
+                                                                                                         rdfs:label "402 Submit Hiring Journey" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/500OpenMyHREmail> rdfs:comment "500 - Open My HR Email. Subclasses: 501, 502." ;
+                                                                                                   rdfs:label "500 Open My HR Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/501OpenMyHRWithHRCEmail> rdfs:comment "501 - Sub-process of 500. CSV row 501 (01:26 = 1.43 min)." ;
+                                                                                                          rdfs:label "501 Open MyHR with HRC Number Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/502CopyHRCNumber> rdfs:comment "502 - Sub-process of 500. CSV row 502 (00:09 = 0.15 min)." ;
+                                                                                                   rdfs:label "502 Copy HRC Number" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/600CompleteLists> rdfs:comment "600 - Complete Lists. Role: Student Admin 1. Data store: StudentAdminTeamFolder. CSV row 600 (00:50 = 0.83 min)." ;
+                                                                                                   rdfs:label "600 Complete Lists" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/new-contract-ontology/700SendConfirmationEmail> rdfs:comment "700 - Send Confirmation Email. Role: Student Admin 1. CSV row 700 (01:21 = 1.35 min)." ;
+                                                                                                           rdfs:label "700 Send Confirmation Email" .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

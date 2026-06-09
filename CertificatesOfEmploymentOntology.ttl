@@ -1,0 +1,881 @@
+@prefix : <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certfiicate-of-Employment-Ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certfiicate-of-Employment-Ontology/> .
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology> rdf:type owl:Ontology ;
+                                                                                                rdfs:comment "Models the Certificate of Employment (CoE) request process managed by the admin team of Infineon's Supply Chain Innovation department, as part of the student offboarding procedure. The process begins one month before the end of the student contract, when the operator emails the departing student to request a list of completed tasks; it continues with preparation of the task list, receiving the task list, creation of the supervisor evaluation file, and a confirmation email with certificate request guidelines. Combines BPMN process structure (user tasks, sequence flows, events) with ontology data (roles, data stores, task durations). Empirical task duration data sourced from CoE_RPT.csv (MM:SS format), converted to decimal minutes." ;
+                                                                                                rdfs:label "Certificate of Employment Process Ontology" .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow> rdf:type owl:ObjectProperty ;
+                                                                                                               rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode> ;
+                                                                                                               rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> ;
+                                                                                                               rdfs:comment "Links a FlowNode to its outgoing SequenceFlow connector." ;
+                                                                                                               rdfs:label "has Sequence Flow" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSubProcess
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSubProcess> rdf:type owl:ObjectProperty ;
+                                                                                                             rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> ;
+                                                                                                             rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> ;
+                                                                                                             rdfs:comment "Links a parent UserTask to one of its constituent sub-tasks." ;
+                                                                                                             rdfs:label "has Sub Process" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> rdf:type owl:ObjectProperty ;
+                                                                                                             rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> ;
+                                                                                                             rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Role> ;
+                                                                                                             rdfs:comment "Links a UserTask to the Role that performs it." ;
+                                                                                                             rdfs:label "is Performed By" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy> rdf:type owl:ObjectProperty ;
+                                                                                                           rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode> ;
+                                                                                                           rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode> ;
+                                                                                                           rdfs:comment "Links a FlowNode to the FlowNode that precedes it in the process." ;
+                                                                                                           rdfs:label "triggered By" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> rdf:type owl:ObjectProperty ;
+                                                                                                             rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> ;
+                                                                                                             rdfs:range <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/DataStores> ;
+                                                                                                             rdfs:comment "Links a UserTask to a DataStore it reads from or writes to." ;
+                                                                                                             rdfs:label "uses Data Store" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> rdf:type owl:DatatypeProperty ;
+                                                                                                                  rdfs:domain <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> ;
+                                                                                                                  rdfs:range xsd:decimal ;
+                                                                                                                  rdfs:comment "Total empirically measured duration of this process step in decimal minutes (Raw Processing Time). Values are converted from the MM:SS entries in CoE_RPT.csv (RPT column) using total_seconds / 60, rounded to two decimals. Only leaf classes corresponding to a CSV row carry a value. The sum of these durations yields the RPT for the whole process, used to calculate the Flow Factor (FF)." ;
+                                                                                                                  rdfs:label "has Duration in Minutes" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/CertificateOfEmploymentRequired
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/CertificateOfEmploymentRequired> rdf:type owl:Class ;
+                                                                                                                               rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StartEvent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/DataStores
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/DataStores> rdf:type owl:Class ;
+                                                                                                          rdfs:comment "BPMN Data Store - persistent information repository accessed by UserTasks during the certificate of employment process." ;
+                                                                                                          rdfs:label "Data Stores" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndEvent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndEvent> rdf:type owl:Class ;
+                                                                                                        rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode> ;
+                                                                                                        rdfs:comment "BPMN End Event - terminates the certificate of employment request process." ;
+                                                                                                        rdfs:label "End Event" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndOfCertificateProcess
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndOfCertificateProcess> rdf:type owl:Class ;
+                                                                                                                       rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndEvent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode> rdf:type owl:Class ;
+                                                                                                        rdfs:comment "Abstract BPMN Flow Node - common superclass of UserTask, StartEvent and EndEvent. Used as domain/range of triggeredBy and hasSequenceFlow to avoid anonymous union nodes." ;
+                                                                                                        rdfs:label "Flow Node" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware> rdf:type owl:Class ;
+                                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/DataStores> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Role
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Role> rdf:type owl:Class ;
+                                                                                                    rdfs:comment "Organisational role that performs UserTasks in the certificate of employment process." ;
+                                                                                                    rdfs:label "Role" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_100_to_200
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_100_to_200> rdf:type owl:Class ;
+                                                                                                             rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_200_to_300
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_200_to_300> rdf:type owl:Class ;
+                                                                                                             rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_300_to_400
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_300_to_400> rdf:type owl:Class ;
+                                                                                                             rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_400_to_500
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_400_to_500> rdf:type owl:Class ;
+                                                                                                             rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_500_to_End
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_500_to_End> rdf:type owl:Class ;
+                                                                                                             rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_Start_to_100
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_Start_to_100> rdf:type owl:Class ;
+                                                                                                               rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SequenceFlow> rdf:type owl:Class ;
+                                                                                                            rdfs:comment "BPMN Sequence Flow - directed connector between two flow elements; sequencing these flows reconstructs the entire certificate of employment process." ;
+                                                                                                            rdfs:label "Sequence Flow" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StartEvent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StartEvent> rdf:type owl:Class ;
+                                                                                                          rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode> ;
+                                                                                                          rdfs:comment "BPMN Start Event - trigger that initiates a process instance." ;
+                                                                                                          rdfs:label "Start Event" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> rdf:type owl:Class ;
+                                                                                                       rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Role> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> rdf:type owl:Class ;
+                                                                                                             rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Role> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> rdf:type owl:Class ;
+                                                                                                                      rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/DataStores> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> rdf:type owl:Class ;
+                                                                                                        rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/FlowNode> ;
+                                                                                                        rdfs:comment "BPMN User Task - a unit process, i.e. the breakdown of the certificate of employment process into smaller, ideally elementary, manually performed steps." ;
+                                                                                                        rdfs:label "User Task" .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> rdf:type owl:Class ;
+                                                                                                                         rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/101OpenAdminTeamFolderAndOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/101OpenAdminTeamFolderAndOverviewList> rdf:type owl:Class ;
+                                                                                                                                     rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/102FindSelectedStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/102FindSelectedStudent> rdf:type owl:Class ;
+                                                                                                                      rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/103ClickEmailTemplateButtonAndOpenDraft
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/103ClickEmailTemplateButtonAndOpenDraft> rdf:type owl:Class ;
+                                                                                                                                       rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/104ReviewCheckEmailForTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/104ReviewCheckEmailForTaskList> rdf:type owl:Class ;
+                                                                                                                              rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/105SendEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/105SendEmail> rdf:type owl:Class ;
+                                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/106CloseOverviewFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/106CloseOverviewFile> rdf:type owl:Class ;
+                                                                                                                    rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> rdf:type owl:Class ;
+                                                                                                                  rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/201OpenEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/201OpenEmail> rdf:type owl:Class ;
+                                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/202ReadEmailAndTemplate
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/202ReadEmailAndTemplate> rdf:type owl:Class ;
+                                                                                                                       rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/203WriteThreeTasks
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/203WriteThreeTasks> rdf:type owl:Class ;
+                                                                                                                  rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/204SaveFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/204SaveFile> rdf:type owl:Class ;
+                                                                                                           rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/205ReplyToStudentAdminTeamEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/205ReplyToStudentAdminTeamEmail> rdf:type owl:Class ;
+                                                                                                                               rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> rdf:type owl:Class ;
+                                                                                                                    rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/301OpenEmailWithTaskListFromStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/301OpenEmailWithTaskListFromStudent> rdf:type owl:Class ;
+                                                                                                                                   rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/302ReadTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/302ReadTaskList> rdf:type owl:Class ;
+                                                                                                               rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/303MoveEmailToRightFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/303MoveEmailToRightFolder> rdf:type owl:Class ;
+                                                                                                                         rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> rdf:type owl:Class ;
+                                                                                                                  rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400OpenAdminTeamFolderCertificateFolderSentToHRNewFormatFolders
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400OpenAdminTeamFolderCertificateFolderSentToHRNewFormatFolders> rdf:type owl:Class ;
+                                                                                                                                                               rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/401CopyNewEvaluationFileAndRenameAfterSelectedStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/401CopyNewEvaluationFileAndRenameAfterSelectedStudent> rdf:type owl:Class ;
+                                                                                                                                                     rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/402OpenNewEvaluationFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/402OpenNewEvaluationFile> rdf:type owl:Class ;
+                                                                                                                        rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/403CopyTaskListFromEmailAttachmentAndPasteIntoNewFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/403CopyTaskListFromEmailAttachmentAndPasteIntoNewFile> rdf:type owl:Class ;
+                                                                                                                                                     rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/404FillOtherEmptyFieldsAndSaveStudentEvaluationFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/404FillOtherEmptyFieldsAndSaveStudentEvaluationFile> rdf:type owl:Class ;
+                                                                                                                                                   rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/405CopyLinkPathOfDocument
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/405CopyLinkPathOfDocument> rdf:type owl:Class ;
+                                                                                                                         rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/406OpenOutlook
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/406OpenOutlook> rdf:type owl:Class ;
+                                                                                                              rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/407WriteNewEmailToSupervisorForStudentEvaluationAndSendEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/407WriteNewEmailToSupervisorForStudentEvaluationAndSendEmail> rdf:type owl:Class ;
+                                                                                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> rdf:type owl:Class ;
+                                                                                                                    rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/UserTask> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/501OpenAdminTeamFolderAndStudentOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/501OpenAdminTeamFolderAndStudentOverviewList> rdf:type owl:Class ;
+                                                                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/502FindSelectedStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/502FindSelectedStudent> rdf:type owl:Class ;
+                                                                                                                      rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/503ClickEmailTemplateButtonAndOpenDraft
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/503ClickEmailTemplateButtonAndOpenDraft> rdf:type owl:Class ;
+                                                                                                                                       rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/504CheckCoERequestEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/504CheckCoERequestEmail> rdf:type owl:Class ;
+                                                                                                                       rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/505SendEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/505SendEmail> rdf:type owl:Class ;
+                                                                                                            rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/506AdjustOverviewListWriteYesInOneColumn
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/506AdjustOverviewListWriteYesInOneColumn> rdf:type owl:Class ;
+                                                                                                                                        rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/507SaveAndCloseOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/507SaveAndCloseOverviewList> rdf:type owl:Class ;
+                                                                                                                           rdfs:subClassOf <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/CertificateOfEmploymentRequired
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/CertificateOfEmploymentRequired> rdf:type owl:NamedIndividual ,
+                                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/CertificateOfEmploymentRequired> ;
+                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_Start_to_100> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndOfCertificateProcess
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndOfCertificateProcess> rdf:type owl:NamedIndividual ,
+                                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndOfCertificateProcess> ;
+                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware> rdf:type owl:NamedIndividual ,
+                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_100_to_200
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_100_to_200> rdf:type owl:NamedIndividual ,
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_100_to_200> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_200_to_300
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_200_to_300> rdf:type owl:NamedIndividual ,
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_200_to_300> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_300_to_400
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_300_to_400> rdf:type owl:NamedIndividual ,
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_300_to_400> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_400_to_500
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_400_to_500> rdf:type owl:NamedIndividual ,
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_400_to_500> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_500_to_End
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_500_to_End> rdf:type owl:NamedIndividual ,
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_500_to_End> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_Start_to_100
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_Start_to_100> rdf:type owl:NamedIndividual ,
+                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_Start_to_100> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> rdf:type owl:NamedIndividual ,
+                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> rdf:type owl:NamedIndividual ,
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> rdf:type owl:NamedIndividual ,
+                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> rdf:type owl:NamedIndividual ,
+                                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_100_to_200> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/101OpenAdminTeamFolderAndOverviewList> ,
+                                                                                                                                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/102FindSelectedStudent> ,
+                                                                                                                                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/103ClickEmailTemplateButtonAndOpenDraft> ,
+                                                                                                                                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/104ReviewCheckEmailForTaskList> ,
+                                                                                                                                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/105SendEmail> ,
+                                                                                                                                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/106CloseOverviewFile> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/CertificateOfEmploymentRequired> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/101OpenAdminTeamFolderAndOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/101OpenAdminTeamFolderAndOverviewList> rdf:type owl:NamedIndividual ,
+                                                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/101OpenAdminTeamFolderAndOverviewList> ;
+                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> ;
+                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.12 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/102FindSelectedStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/102FindSelectedStudent> rdf:type owl:NamedIndividual ,
+                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/102FindSelectedStudent> ;
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.05 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/103ClickEmailTemplateButtonAndOpenDraft
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/103ClickEmailTemplateButtonAndOpenDraft> rdf:type owl:NamedIndividual ,
+                                                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/103ClickEmailTemplateButtonAndOpenDraft> ;
+                                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.07 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/104ReviewCheckEmailForTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/104ReviewCheckEmailForTaskList> rdf:type owl:NamedIndividual ,
+                                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/104ReviewCheckEmailForTaskList> ;
+                                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.08 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/105SendEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/105SendEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/105SendEmail> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.03 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/106CloseOverviewFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/106CloseOverviewFile> rdf:type owl:NamedIndividual ,
+                                                                                                                             <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/106CloseOverviewFile> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.02 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> rdf:type owl:NamedIndividual ,
+                                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_200_to_300> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/201OpenEmail> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/202ReadEmailAndTemplate> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/203WriteThreeTasks> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/204SaveFile> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/205ReplyToStudentAdminTeamEmail> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/201OpenEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/201OpenEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/201OpenEmail> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.05 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/202ReadEmailAndTemplate
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/202ReadEmailAndTemplate> rdf:type owl:NamedIndividual ,
+                                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/202ReadEmailAndTemplate> ;
+                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> ;
+                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.38 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/203WriteThreeTasks
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/203WriteThreeTasks> rdf:type owl:NamedIndividual ,
+                                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/203WriteThreeTasks> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 2.72 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/204SaveFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/204SaveFile> rdf:type owl:NamedIndividual ,
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/204SaveFile> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> ;
+                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.05 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/205ReplyToStudentAdminTeamEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/205ReplyToStudentAdminTeamEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/205ReplyToStudentAdminTeamEmail> ;
+                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> ;
+                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.80 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> rdf:type owl:NamedIndividual ,
+                                                                                                                             <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_300_to_400> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/301OpenEmailWithTaskListFromStudent> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/302ReadTaskList> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/303MoveEmailToRightFolder> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/301OpenEmailWithTaskListFromStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/301OpenEmailWithTaskListFromStudent> rdf:type owl:NamedIndividual ,
+                                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/301OpenEmailWithTaskListFromStudent> ;
+                                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.18 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/302ReadTaskList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/302ReadTaskList> rdf:type owl:NamedIndividual ,
+                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/302ReadTaskList> ;
+                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.83 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/303MoveEmailToRightFolder
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/303MoveEmailToRightFolder> rdf:type owl:NamedIndividual ,
+                                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/303MoveEmailToRightFolder> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.10 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> rdf:type owl:NamedIndividual ,
+                                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_400_to_500> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400OpenAdminTeamFolderCertificateFolderSentToHRNewFormatFolders> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/401CopyNewEvaluationFileAndRenameAfterSelectedStudent> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/402OpenNewEvaluationFile> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/403CopyTaskListFromEmailAttachmentAndPasteIntoNewFile> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/404FillOtherEmptyFieldsAndSaveStudentEvaluationFile> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/405CopyLinkPathOfDocument> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/406OpenOutlook> ,
+                                                                                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/407WriteNewEmailToSupervisorForStudentEvaluationAndSendEmail> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400OpenAdminTeamFolderCertificateFolderSentToHRNewFormatFolders
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400OpenAdminTeamFolderCertificateFolderSentToHRNewFormatFolders> rdf:type owl:NamedIndividual ,
+                                                                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400OpenAdminTeamFolderCertificateFolderSentToHRNewFormatFolders> ;
+                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.18 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/401CopyNewEvaluationFileAndRenameAfterSelectedStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/401CopyNewEvaluationFileAndRenameAfterSelectedStudent> rdf:type owl:NamedIndividual ,
+                                                                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/401CopyNewEvaluationFileAndRenameAfterSelectedStudent> ;
+                                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.27 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/402OpenNewEvaluationFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/402OpenNewEvaluationFile> rdf:type owl:NamedIndividual ,
+                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/402OpenNewEvaluationFile> ;
+                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.17 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/403CopyTaskListFromEmailAttachmentAndPasteIntoNewFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/403CopyTaskListFromEmailAttachmentAndPasteIntoNewFile> rdf:type owl:NamedIndividual ,
+                                                                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/403CopyTaskListFromEmailAttachmentAndPasteIntoNewFile> ;
+                                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.50 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/404FillOtherEmptyFieldsAndSaveStudentEvaluationFile
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/404FillOtherEmptyFieldsAndSaveStudentEvaluationFile> rdf:type owl:NamedIndividual ,
+                                                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/404FillOtherEmptyFieldsAndSaveStudentEvaluationFile> ;
+                                                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                                   <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.70 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/405CopyLinkPathOfDocument
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/405CopyLinkPathOfDocument> rdf:type owl:NamedIndividual ,
+                                                                                                                                  <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/405CopyLinkPathOfDocument> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                         <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.10 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/406OpenOutlook
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/406OpenOutlook> rdf:type owl:NamedIndividual ,
+                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/406OpenOutlook> ;
+                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                              <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.12 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/407WriteNewEmailToSupervisorForStudentEvaluationAndSendEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/407WriteNewEmailToSupervisorForStudentEvaluationAndSendEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/407WriteNewEmailToSupervisorForStudentEvaluationAndSendEmail> ;
+                                                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 1.27 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                             <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSequenceFlow> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_500_to_End> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasSubProcess> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/501OpenAdminTeamFolderAndStudentOverviewList> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/502FindSelectedStudent> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/503ClickEmailTemplateButtonAndOpenDraft> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/504CheckCoERequestEmail> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/505SendEmail> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/506AdjustOverviewListWriteYesInOneColumn> ,
+                                                                                                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/507SaveAndCloseOverviewList> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/triggeredBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/501OpenAdminTeamFolderAndStudentOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/501OpenAdminTeamFolderAndStudentOverviewList> rdf:type owl:NamedIndividual ,
+                                                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/501OpenAdminTeamFolderAndStudentOverviewList> ;
+                                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> ;
+                                                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.12 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/502FindSelectedStudent
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/502FindSelectedStudent> rdf:type owl:NamedIndividual ,
+                                                                                                                               <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/502FindSelectedStudent> ;
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                      <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.05 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/503ClickEmailTemplateButtonAndOpenDraft
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/503ClickEmailTemplateButtonAndOpenDraft> rdf:type owl:NamedIndividual ,
+                                                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/503ClickEmailTemplateButtonAndOpenDraft> ;
+                                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.07 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/504CheckCoERequestEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/504CheckCoERequestEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                                <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/504CheckCoERequestEmail> ;
+                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                       <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.07 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/505SendEmail
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/505SendEmail> rdf:type owl:NamedIndividual ,
+                                                                                                                     <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/505SendEmail> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                            <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.03 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/506AdjustOverviewListWriteYesInOneColumn
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/506AdjustOverviewListWriteYesInOneColumn> rdf:type owl:NamedIndividual ,
+                                                                                                                                                 <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/506AdjustOverviewListWriteYesInOneColumn> ;
+                                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> ;
+                                                                                                                                        <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.05 .
+
+
+###  http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/507SaveAndCloseOverviewList
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/507SaveAndCloseOverviewList> rdf:type owl:NamedIndividual ,
+                                                                                                                                    <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/507SaveAndCloseOverviewList> ;
+                                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/isPerformedBy> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> ;
+                                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/usesDataStore> <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> ;
+                                                                                                                           <http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/hasDurationMinutes> 0.03 .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/CertificateOfEmploymentRequired> rdfs:comment "Start event triggered one month (4 weeks) before the end of the student contract, when a certificate of employment will be required. CSV StartEvent: reception of task list." ;
+                                                                                                                               rdfs:label "Certificate of Employment Required" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/EndOfCertificateProcess> rdfs:comment "End event marking successful completion of the certificate of employment request process. CSV EndEvent: end of certificate of employment request." ;
+                                                                                                                       rdfs:label "End Of Certificate Process" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/MyHRSoftware> rdfs:comment "MyHR software/platform used by the student when preparing and writing the task list. Identified in CSV as 'myHRSoftware'." ;
+                                                                                                            rdfs:label "MyHR Software" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_100_to_200> rdfs:comment "100 -> 200." ;
+                                                                                                             rdfs:label "SF 100 to 200" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_200_to_300> rdfs:comment "200 -> 300." ;
+                                                                                                             rdfs:label "SF 200 to 300" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_300_to_400> rdfs:comment "300 -> 400." ;
+                                                                                                             rdfs:label "SF 300 to 400" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_400_to_500> rdfs:comment "400 -> 500." ;
+                                                                                                             rdfs:label "SF 400 to 500" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_500_to_End> rdfs:comment "500 -> EndOfCertificateProcess." ;
+                                                                                                             rdfs:label "SF 500 to End" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/SF_Start_to_100> rdfs:comment "CertificateOfEmploymentRequired -> 100." ;
+                                                                                                               rdfs:label "SF Start to 100" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/Student> rdfs:comment "The departing student who compiles and returns the list of main tasks completed, used as input for the certificate of employment. Identified in CSV as 'Student'." ;
+                                                                                                       rdfs:label "Student" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdmin1> rdfs:comment "The designated admin team operator responsible for managing certificate of employment requests within the Supply Chain Innovation department. Identified in CSV as 'Stud_Admin_1'." ;
+                                                                                                             rdfs:label "Student Admin 1" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/StudentAdminTeamFolder> rdfs:comment "Shared admin team folder containing the student overview list and certificate documents used throughout the process. Identified in CSV as 'StudentAdminTeamFolder'." ;
+                                                                                                                      rdfs:label "Student Admin Team Folder" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/100TaskListEmailToStudent> rdfs:comment "100 - Task List Email To Student. Composite UserTask: the operator emails the departing student to request a list of the main tasks completed, using an automated email template linked to the daily Excel task list. Subclasses: 101-106. Role: Student Admin 1. Data store: StudentAdminTeamFolder." ;
+                                                                                                                         rdfs:label "100 Task List Email To Student" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/101OpenAdminTeamFolderAndOverviewList> rdfs:comment "101 - Sub-process of 100. Open the admin team folder and the student overview list. CSV row 101 (00:07 = 0.12 min). Data store: StudentAdminTeamFolder." ;
+                                                                                                                                     rdfs:label "101 Open Admin Team Folder And Overview List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/102FindSelectedStudent> rdfs:comment "102 - Sub-process of 100. Find the selected departing student in the overview list. CSV row 102 (00:03 = 0.05 min)." ;
+                                                                                                                      rdfs:label "102 Find Selected Student" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/103ClickEmailTemplateButtonAndOpenDraft> rdfs:comment "103 - Sub-process of 100. Click the automated email template button and open the draft email. CSV row 103 (00:04 = 0.07 min)." ;
+                                                                                                                                       rdfs:label "103 Click Email Template Button And Open Draft" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/104ReviewCheckEmailForTaskList> rdfs:comment "104 - Sub-process of 100. Review and check the email requesting the task list before sending. CSV row 104 (00:05 = 0.08 min)." ;
+                                                                                                                              rdfs:label "104 Review Check Email For Task List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/105SendEmail> rdfs:comment "105 - Sub-process of 100. Send the task list request email to the departing student. CSV row 105 (00:02 = 0.03 min)." ;
+                                                                                                            rdfs:label "105 Send Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/106CloseOverviewFile> rdfs:comment "106 - Sub-process of 100. Close the student overview file. CSV row 106 (00:01 = 0.02 min)." ;
+                                                                                                                    rdfs:label "106 Close Overview File" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/200PrepareTaskList> rdfs:comment "200 - Prepare Task List. Composite UserTask: the departing student opens the email and template, writes the three main tasks, saves the file and replies to the admin team. Subclasses: 201-205. Role: Student. Data store: MyHRSoftware." ;
+                                                                                                                  rdfs:label "200 Prepare Task List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/201OpenEmail> rdfs:comment "201 - Sub-process of 200. Student opens the email received from the admin team. CSV row 201 (00:03 = 0.05 min)." ;
+                                                                                                            rdfs:label "201 Open Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/202ReadEmailAndTemplate> rdfs:comment "202 - Sub-process of 200. Student reads the email and the provided task list template. CSV row 202 (00:23 = 0.38 min)." ;
+                                                                                                                       rdfs:label "202 Read Email And Template" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/203WriteThreeTasks> rdfs:comment "203 - Sub-process of 200. Student writes the three main tasks performed during the internship. CSV row 203 (02:43 = 2.72 min). Data store: myHRSoftware." ;
+                                                                                                                  rdfs:label "203 Write Three Tasks" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/204SaveFile> rdfs:comment "204 - Sub-process of 200. Student saves the completed task list file. CSV row 204 (00:03 = 0.05 min)." ;
+                                                                                                           rdfs:label "204 Save File" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/205ReplyToStudentAdminTeamEmail> rdfs:comment "205 - Sub-process of 200. Student replies to the admin team email, returning the task list. CSV row 205 (00:48 = 0.80 min)." ;
+                                                                                                                               rdfs:label "205 Reply To Student Admin Team Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/300ReceivingTaskList> rdfs:comment "300 - Receiving Task List. Composite UserTask: the operator receives, reads and files the task list returned by the student. Subclasses: 301-303. Role: Student Admin 1." ;
+                                                                                                                    rdfs:label "300 Receiving Task List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/301OpenEmailWithTaskListFromStudent> rdfs:comment "301 - Sub-process of 300. Open the email containing the task list returned by the student. CSV row 301 (00:11 = 0.18 min)." ;
+                                                                                                                                   rdfs:label "301 Open Email With Task List From Student" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/302ReadTaskList> rdfs:comment "302 - Sub-process of 300. Read the task list provided by the student. CSV row 302 (00:50 = 0.83 min)." ;
+                                                                                                               rdfs:label "302 Read Task List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/303MoveEmailToRightFolder> rdfs:comment "303 - Sub-process of 300. Move the email to the correct folder for archiving. CSV row 303 (00:06 = 0.10 min)." ;
+                                                                                                                         rdfs:label "303 Move Email To Right Folder" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400EvaluationSheet> rdfs:comment "400 - Evaluation Sheet. Composite UserTask: the operator creates the student evaluation file from the task list and emails the supervisor to request the evaluation. Subclasses: 400 (open folders), 401-407. Role: Student Admin 1." ;
+                                                                                                                  rdfs:label "400 Evaluation Sheet" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/400OpenAdminTeamFolderCertificateFolderSentToHRNewFormatFolders> rdfs:comment "400 - Sub-process of 400. Open the admin team folder > certificate folder > sent to HR > New_format folders. CSV row 400 (00:11 = 0.18 min)." ;
+                                                                                                                                                               rdfs:label "400 Open Admin Team Folder Certificate Folder Sent To HR New Format Folders" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/401CopyNewEvaluationFileAndRenameAfterSelectedStudent> rdfs:comment "401 - Sub-process of 400. Copy the new evaluation file and rename it after the selected student. CSV row 401 (00:16 = 0.27 min)." ;
+                                                                                                                                                     rdfs:label "401 Copy New Evaluation File And Rename After Selected Student" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/402OpenNewEvaluationFile> rdfs:comment "402 - Sub-process of 400. Open the new student evaluation file. CSV row 402 (00:10 = 0.17 min)." ;
+                                                                                                                        rdfs:label "402 Open New Evaluation File" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/403CopyTaskListFromEmailAttachmentAndPasteIntoNewFile> rdfs:comment "403 - Sub-process of 400. Copy the task list from the email attachment and paste it into the new file. CSV row 403 (00:30 = 0.50 min)." ;
+                                                                                                                                                     rdfs:label "403 Copy Task List From Email Attachment And Paste Into New File" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/404FillOtherEmptyFieldsAndSaveStudentEvaluationFile> rdfs:comment "404 - Sub-process of 400. Fill the other empty fields and save the student evaluation file. CSV row 404 (00:42 = 0.70 min)." ;
+                                                                                                                                                   rdfs:label "404 Fill Other Empty Fields And Save Student Evaluation File" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/405CopyLinkPathOfDocument> rdfs:comment "405 - Sub-process of 400. Copy the link/path of the evaluation document. CSV row 405 (00:06 = 0.10 min)." ;
+                                                                                                                         rdfs:label "405 Copy Link Path Of Document" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/406OpenOutlook> rdfs:comment "406 - Sub-process of 400. Open Outlook to prepare the email to the supervisor. CSV row 406 (00:07 = 0.12 min)." ;
+                                                                                                              rdfs:label "406 Open Outlook" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/407WriteNewEmailToSupervisorForStudentEvaluationAndSendEmail> rdfs:comment "407 - Sub-process of 400. Write a new email to the supervisor requesting the student evaluation (attaching the link) and send it. CSV row 407 (01:16 = 1.27 min)." ;
+                                                                                                                                                            rdfs:label "407 Write New Email To Supervisor For Student Evaluation And Send Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/500ConfirmationEmail> rdfs:comment "500 - Confirmation Email. Composite UserTask: the operator sends the confirmation email with certificate request guidelines and updates the student overview list. Subclasses: 501-507. Role: Student Admin 1." ;
+                                                                                                                    rdfs:label "500 Confirmation Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/501OpenAdminTeamFolderAndStudentOverviewList> rdfs:comment "501 - Sub-process of 500. Open the admin team folder and the student overview list. CSV row 501 (00:07 = 0.12 min). Data store: StudentAdminTeamFolder." ;
+                                                                                                                                            rdfs:label "501 Open Admin Team Folder And Student Overview List" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/502FindSelectedStudent> rdfs:comment "502 - Sub-process of 500. Find the selected student in the overview list. CSV row 502 (00:03 = 0.05 min)." ;
+                                                                                                                      rdfs:label "502 Find Selected Student" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/503ClickEmailTemplateButtonAndOpenDraft> rdfs:comment "503 - Sub-process of 500. Click the email template button and open the draft. CSV row 503 (00:04 = 0.07 min)." ;
+                                                                                                                                       rdfs:label "503 Click Email Template Button And Open Draft" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/504CheckCoERequestEmail> rdfs:comment "504 - Sub-process of 500. Check the certificate of employment (CoE) request email. CSV row 504 (00:04 = 0.07 min)." ;
+                                                                                                                       rdfs:label "504 Check CoE Request Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/505SendEmail> rdfs:comment "505 - Sub-process of 500. Send the confirmation email with certificate request guidelines. CSV row 505 (00:02 = 0.03 min)." ;
+                                                                                                            rdfs:label "505 Send Email" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/506AdjustOverviewListWriteYesInOneColumn> rdfs:comment "506 - Sub-process of 500. Adjust the overview list by writing 'yes' in one column. CSV row 506 (00:03 = 0.05 min). Data store: StudentAdminTeamFolder." ;
+                                                                                                                                        rdfs:label "506 Adjust Overview List Write Yes In One Column" .
+
+
+<http://www.semanticweb.org/obrienchrist/ontologies/2026/5/Certificate-of-Employment-Ontology/507SaveAndCloseOverviewList> rdfs:comment "507 - Sub-process of 500. Save and close the student overview list. CSV row 507 (00:02 = 0.03 min). Data store: StudentAdminTeamFolder." ;
+                                                                                                                           rdfs:label "507 Save And Close Overview List" .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
