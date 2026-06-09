@@ -24,8 +24,8 @@ The ontology layer serves three purposes:
    facilitating Operating Curve benchmarking
 
 ## Contents
-- `new-hiring-ontology.owl` — NH process ontology
-- `certificate-of-employment-ontology.owl` — CoE ontology
+- `NewContractsOntology.ttl` — NH process ontology
+- `CertificateOfEmploymentOntology` — CoE ontology
 
 ## Ontology Details
 - Built in: Protégé
