@@ -25,7 +25,7 @@ The ontology layer serves three purposes:
 
 ## Contents
 - `NewContractsOntology.ttl` — NH process ontology
-- `CertificateOfEmploymentOntology` — CoE ontology
+- `CertificatesOfEmploymentOntology` — CoE ontology
 
 ## Ontology Details
 - Built in: Protégé
@@ -37,13 +37,13 @@ The ontology layer serves three purposes:
   hasDurationMinutes
 
 ## Visualization
-- New Hiring Ontology: [WebVOWL link]
-- CoE Ontology: [WebVOWL link]
+- New Hiring Ontology: https://service.tib.eu/webvowl/#iri=https://raw.githubusercontent.com/cobrie23tcd/OWL-Ontology-of-Unit-Processes-/main/NewContractsOntology.ttl
+- CoE Ontology: https://service.tib.eu/webvowl/#iri=https://raw.githubusercontent.com/cobrie23tcd/OWL-Ontology-of-Unit-Processes-/main/CertificatesOfEmploymentOntology.ttl
 
 ## Citation
 O'Brien Christ (2026). Unit Process Ontologies for 
 Lean Analysis of Non-Manufacturing Workflows (v1.0) 
-[Dataset]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+[Dataset]. Zenodo. https://doi.org/10.5281/zenodo.20607494
 
 ## References
 - W3C OWL Working Group (2012). OWL 2 Web Ontology 
